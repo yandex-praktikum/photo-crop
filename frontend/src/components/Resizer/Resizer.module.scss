@@ -1,0 +1,82 @@
+@use 'variables' as *;
+
+$borderColor: gray;
+$handleColor: black;
+
+.resizer {
+	position: relative;
+	border: 1px dotted $borderColor;
+	cursor: move;
+}
+
+.handler {
+	position: absolute;
+	background-color: $handleColor;
+	width: 10px;
+	height: 10px;
+	z-index: 10;
+}
+
+.active {
+	background-color: $green;
+}
+
+.top {
+	top: -5px;
+	left: 50%;
+	transform: translateX(-50%);
+	cursor: n-resize;
+}
+
+.right {
+	top: 50%;
+	right: -5px;
+	transform: translateY(-50%);
+	cursor: e-resize;
+}
+
+.bottom {
+	bottom: -5px;
+	left: 50%;
+	transform: translateX(-50%);
+	cursor: s-resize;
+}
+
+.left {
+	top: 50%;
+	left: -5px;
+	transform: translateY(-50%);
+	cursor: w-resize;
+}
+
+.topLeft,
+.bottomRight,
+.topRight,
+.bottomLeft {
+	width: 10px;
+	height: 10px;
+}
+
+.topLeft {
+	top: -5px;
+	left: -5px;
+	cursor: nw-resize;
+}
+
+.topRight {
+	top: -5px;
+	right: -5px;
+	cursor: ne-resize;
+}
+
+.bottomLeft {
+	bottom: -5px;
+	left: -5px;
+	cursor: sw-resize;
+}
+
+.bottomRight {
+	bottom: -5px;
+	right: -5px;
+	cursor: se-resize;
+}
