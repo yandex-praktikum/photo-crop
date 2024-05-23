@@ -1,0 +1,38 @@
+@use '../../styles/variables' as *;
+
+.container {
+	width: 100%;
+	box-sizing: border-box;
+	border: 3px dashed gray;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(gray, 0.3);
+	padding: $defaultPadding;
+	cursor: pointer;
+
+	p {
+		margin: 0;
+
+		&.error {
+			&::before {
+				content: '⚠️ ';
+			}
+			padding: $defaultPadding;
+			color: $black;
+		}
+	}
+
+	&.dragging {
+		border-color: $primary;
+	}
+
+	&.allow {
+		background-color: rgba($green, 0.5);
+	}
+
+	&.forbidden {
+		background-color: rgba($fuchsia, 0.5);
+	}
+}
