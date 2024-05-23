@@ -1,0 +1,37 @@
+$black: #000000;
+$grey: #c4c4c4;
+$dotted: url(https://code.s3.yandex.net/web-code/images/dotted.svg);
+$sparseDotted: url(https://code.s3.yandex.net/web-code/images/dotted-l.svg);
+$white: #ffffff;
+$pink: #feafe8;
+$fuchsia: #fd24af;
+$yellow: #ffc802;
+$green: #80d994;
+$blue: #6dc1fd;
+$violet: #5f0dee;
+
+$iconBurgerOpen: url(https://code.s3.yandex.net/web-code/images/burger-open.svg);
+$iconBurgerClose: url(https://code.s3.yandex.net/web-code/images/burger-close.svg);
+$iconXButton: url(https://code.s3.yandex.net/web-code/images/x-button.svg);
+
+$primary: #000000;
+$secondary: #e9eae8;
+$background: white;
+$allow: $green;
+$deny: $fuchsia;
+
+$font: 'Open Sans', sans-serif;
+$fontMono: monospace;
+$baseFontSize: 18px;
+$baseFontColor: $black;
+
+$maxPageWidth: 1200px;
+$defaultPadding: 1rem;
+
+$panelBorder: 1px solid gray;
+$containerBorder: 1px solid black;
+$overlayIconSize: 15vmin;
+$overlayBackground: rgba(255, 255, 255, 0.9);
+
+$formPadding: 40px;
+$hover: inset 0 0 0 100px rgb(0 0 0 / 15%);
