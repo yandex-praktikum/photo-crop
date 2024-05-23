@@ -1,0 +1,705 @@
+@use 'normalize';
+@use 'variables' as *;
+
+@mixin color($value) {
+	background-color: $value;
+	&-text {
+		color: $value;
+	}
+}
+
+html,
+body {
+	height: 100%;
+	font-family: $font;
+	font-size: $baseFontSize;
+	color: $baseFontColor;
+	background: $background;
+}
+
+/* Типографика  */
+.column {
+	flex-direction: column;
+}
+
+.border {
+	border: 1px solid black;
+}
+
+h1.title {
+	font-size: 45px;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+h2.title {
+	font-size: 38px;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+h3.title {
+	font-size: 31px;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+h4.title {
+	font-size: 25px;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+h5.title {
+	font-size: 22px;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+h6.title {
+	font-size: 20px;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+.accent {
+	background-color: $black;
+	color: $white;
+}
+
+/* ссылки */
+a.link {
+	color: inherit;
+}
+
+a.link:hover {
+	color: $fuchsia;
+}
+
+/* списки */
+div.list {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 35px;
+	padding: 25px;
+}
+
+ul.list {
+	display: flex;
+	flex-wrap: nowrap;
+	column-gap: 26px;
+	list-style-type: square;
+
+	li {
+		position: relative;
+		line-height: 1;
+	}
+}
+
+ul.list:not(.column) {
+	list-style-type: none;
+	position: relative;
+
+	li + li::before {
+		content: '';
+		position: absolute;
+		bottom: 7px;
+		left: -15px;
+		width: 6px;
+		height: 6px;
+		background-color: $black;
+	}
+}
+
+/* Формы */
+form.form,
+section.section {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	border: 1px solid $black;
+	padding: 45px;
+}
+
+.form {
+	fieldset {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		border: 1px dotted $black;
+
+		&.row {
+			flex-direction: row;
+			align-items: stretch;
+		}
+
+		legend {
+			margin-bottom: 20px;
+			background-color: black;
+			color: white;
+			padding: 10px 15px;
+			font-size: 12px;
+			text-transform: uppercase;
+			font-weight: 800;
+		}
+	}
+
+	/* инпуты */
+
+	label {
+		display: block;
+
+		.row {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+		}
+	}
+
+	label span {
+		display: block;
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+
+	input[type='text'],
+	input[type='number'],
+	input[type='date'],
+	input[type='month'],
+	input[type='time'],
+	input[type='datetime-local'],
+	input[type='email'],
+	input[type='tel'],
+	input[type='url'],
+	input[type='color'],
+	input[type='password'],
+	textarea,
+	select,
+	.input {
+		border: 1px solid $black;
+		padding: 10px 15px;
+		background-color: transparent;
+		font-family: inherit;
+		font-size: inherit;
+		width: 100%;
+		box-sizing: border-box;
+
+		&::placeholder {
+			color: rgb(0 0 0 / 60%);
+		}
+
+		&:focus {
+			outline: 2px solid $black;
+			outline-offset: 0;
+		}
+
+		&:invalid {
+			background-color: $fuchsia;
+		}
+
+		&:invalid::placeholder {
+			color: $black;
+		}
+
+		&:disabled {
+			border-color: rgb(0 0 0 / 60%);
+			box-shadow: inset 0 0 0 100px rgb(0 0 0 / 15%);
+		}
+	}
+
+	input[type='color'] {
+		padding: 0;
+		height: 42.3px;
+	}
+
+	label:has(input[type='file']) {
+		position: relative;
+
+		input[type='file'] {
+			position: absolute;
+			opacity: 0;
+			z-index: 2;
+			font-size: 30px;
+		}
+
+		button {
+			z-index: 1;
+			font-weight: 500;
+			padding: 10px 15px;
+		}
+
+		span {
+			border-left: none;
+		}
+
+		> div {
+			display: flex;
+			align-items: stretch;
+		}
+
+		&:hover button {
+			box-shadow: inset 0 0 0 100px rgb(0 0 0 / 15%);
+			cursor: pointer;
+		}
+	}
+
+	/* радио */
+
+	label:has(input[type='radio']) {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+		cursor: pointer;
+	}
+
+	input[type='radio'] {
+		width: 27px;
+		height: 27px;
+		accent-color: $black;
+	}
+
+	input[type='radio']:focus {
+		outline: 2px solid $black;
+		outline-offset: 0;
+	}
+
+	/* чекбоксы */
+	label:has(input[type='checkbox']) {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+		cursor: pointer;
+	}
+
+	input[type='checkbox'] {
+		width: 27px;
+		height: 27px;
+		accent-color: $black;
+	}
+
+	input[type='checkbox']:focus {
+		outline: 2px solid $black;
+		outline-offset: 0;
+	}
+
+	/* рэндж */
+
+	label {
+		display: block;
+
+		span:first-child {
+			display: block;
+			font-size: 12px;
+			font-weight: 800;
+			text-transform: uppercase;
+		}
+
+		&:has(input[required]) span:first-child::after {
+			content: '*';
+		}
+	}
+
+	label,
+	fieldset {
+		span.error {
+			display: none;
+		}
+
+		&:has(input:invalid) span.error {
+			display: block;
+			padding: 5px 15px;
+			font-weight: 500;
+			text-transform: none;
+
+			&::before {
+				content: 'Ошибка: ';
+			}
+		}
+	}
+
+	input[type='range'] {
+		width: 100%;
+		-webkit-appearance: none;
+	}
+
+	label:has(input[type='range']):has(input[list]) {
+		position: relative;
+
+		datalist {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			writing-mode: vertical-lr;
+			width: 100%;
+		}
+
+		option {
+			padding: 0;
+
+			&::before {
+				content: '- ';
+			}
+		}
+
+		input[type='range'] {
+			background-color: transparent;
+			-webkit-appearance: none;
+			margin: 0;
+		}
+	}
+
+	input[type='range']:focus {
+		outline: 2px solid $black;
+		outline-offset: 2px;
+	}
+
+	input[type='range']::-webkit-slider-runnable-track {
+		width: 100%;
+		height: 10px;
+		cursor: pointer;
+		background-color: $black;
+		border-radius: 0;
+		border: none;
+	}
+
+	input[type='range']::-webkit-slider-thumb {
+		border: 1px solid $black;
+		height: 16px;
+		width: 26px;
+		border-radius: 0;
+		background-color: $white;
+		cursor: pointer;
+		-webkit-appearance: none;
+		margin-top: -3px;
+	}
+
+	input[type='range']::-moz-range-track {
+		width: 100%;
+		height: 10px;
+		cursor: pointer;
+		background-color: $black;
+		border-radius: 0;
+		border: none;
+	}
+
+	input[type='range']::-moz-range-thumb {
+		box-sizing: border-box;
+		border: 1px solid $black;
+		height: 16px;
+		width: 26px;
+		border-radius: 0;
+		background: $white;
+		cursor: pointer;
+	}
+
+	input[type='range']:disabled::-webkit-slider-runnable-track {
+		opacity: 0.6;
+	}
+
+	input[type='range']:disabled::-moz-range-track {
+		background-color: rgb(0 0 0 / 60%);
+	}
+
+	input[type='range']:disabled::-moz-range-thumb {
+		border-color: rgb(0 0 0 / 60%);
+	}
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+	clip-path: inset(0, 0, 0, 0);
+	overflow: hidden;
+}
+
+/* табы */
+
+.tabs {
+	display: flex;
+
+	&_vertical {
+		flex-direction: column;
+	}
+}
+
+.tab {
+	border: 1px solid $black;
+	padding: 10px 15px;
+	background-color: $yellow;
+	color: $black;
+	font-weight: 800;
+	text-transform: uppercase;
+
+	&_active {
+		background-color: $white;
+	}
+}
+
+/* кнопки */
+
+.button {
+	border: 1px solid $black;
+	padding: 10px 65px;
+	color: $black;
+	background-color: transparent;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: 800;
+	text-transform: uppercase;
+	white-space: nowrap;
+
+	&:hover {
+		box-shadow: inset 0 0 0 100px rgb(0 0 0 / 15%);
+		cursor: pointer;
+	}
+
+	&:focus {
+		outline: 2px solid $black;
+		outline-offset: 0;
+	}
+
+	&[disabled] {
+		opacity: 0.6;
+
+		&:hover {
+			box-shadow: none;
+			cursor: default;
+		}
+	}
+
+	&.icon {
+		width: 17px;
+		height: 17px;
+		border: none;
+		background-color: transparent;
+		background-repeat: no-repeat;
+		background-position: center;
+		cursor: pointer;
+	}
+
+	&.open {
+		background-image: $iconBurgerOpen;
+	}
+
+	&.close {
+		background-image: $iconBurgerClose;
+	}
+}
+
+/* переключатель */
+.toggle {
+	min-width: 125px;
+	border: 1px solid $black;
+	padding: 5px 20px;
+	color: $black;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: 400;
+	text-transform: uppercase;
+
+	&:hover {
+		box-shadow: inset 0 0 0 100px rgb(0 0 0 / 15%);
+		cursor: pointer;
+	}
+
+	&:focus {
+		outline: 2px solid $black;
+		outline-offset: 0;
+	}
+
+	&.light {
+		background-color: $white;
+	}
+
+	&.dark {
+		background-color: $blue;
+	}
+
+	&.toggle_active {
+		background-color: $yellow;
+		font-weight: 800;
+	}
+}
+
+/* таблицы */
+.table {
+	border-collapse: collapse;
+	text-align: center;
+
+	th,
+	td {
+		border: 1px solid $black;
+		padding: 10px 30px;
+		background-color: $yellow;
+	}
+
+	th,
+	td:first-of-type {
+		font-weight: 800;
+		text-transform: uppercase;
+	}
+
+	thead tr th,
+	tr:nth-of-type(2n) td {
+		background-color: $green;
+	}
+
+	th:first-of-type {
+		border-top-width: 0;
+		border-left-width: 0;
+		background-color: unset;
+	}
+}
+
+/* попапы */
+
+.popup {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	border: 1px solid #000;
+	padding: 40px 20px 20px;
+	background-color: $yellow;
+	transform: translate(-50%);
+}
+
+.popup::before {
+	content: '';
+	position: absolute;
+	top: 25px;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background-color: $black;
+}
+
+.popup button {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	width: 15px;
+	height: 15px;
+	border: none;
+	margin-left: auto;
+	background-color: transparent;
+	background-image: $iconXButton;
+	background-size: 15px;
+	cursor: pointer;
+}
+
+.popup button:focus {
+	outline: 2px solid $black;
+	outline-offset: 0;
+}
+
+/* Картинки */
+
+.userpic {
+	width: 80px;
+	height: 80px;
+	border: 1px solid $black;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+figure.image {
+	img {
+		border: 1px solid $black;
+	}
+
+	figcaption {
+		font-style: italic;
+	}
+}
+
+/* контейнеры */
+
+.container {
+	background: $white;
+
+	&.big {
+		padding: 50px;
+	}
+
+	&.small {
+		padding: 25px;
+	}
+
+	&.inverted {
+		background-color: black;
+		color: $white;
+	}
+}
+
+/* окно */
+.overlay {
+	position: relative;
+}
+
+.overlay::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Фоны и цвета */
+
+.black {
+	@include color($black);
+}
+
+.grey {
+	@include color($grey);
+}
+
+.dotted {
+	background-image: $dotted;
+}
+
+.dotted-light {
+	background-image: $sparseDotted;
+}
+
+.white {
+	@include color($white);
+}
+
+.pink {
+	@include color($pink);
+}
+
+.fuchsia {
+	@include color($fuchsia);
+}
+
+.yellow {
+	@include color($yellow);
+}
+
+.green {
+	@include color($green);
+}
+
+.blue {
+	@include color($blue);
+}
+
+.violet {
+	@include color($violet);
+}
