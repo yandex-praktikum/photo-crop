@@ -5,11 +5,14 @@ import { errors } from 'celebrate';
 
 import { PORT } from './config';
 
+import cropRouter from './route/crop';
+
 const app = express();
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use('/', cropRouter);
 app.use(errors());
 
 app.listen(PORT, () => {
