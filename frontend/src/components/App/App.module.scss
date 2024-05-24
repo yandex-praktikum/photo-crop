@@ -8,4 +8,32 @@
 	background-color: $white;
 	padding: $defaultPadding;
 	border: $containerBorder;
+
+	.container {
+		position: relative;
+
+		.preview {
+			min-height: 250px;
+			min-width: 250px;
+			max-height: 60vh;
+			max-width: 80vw;
+		}
+
+		.resizer {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
+
+	.dropzone {
+		max-width: 80vw;
+		height: 60vh;
+		font-size: 1.5rem;
+	}
+
+	.actions {
+		display: flex;
+		gap: 1rem;
+	}
 }
