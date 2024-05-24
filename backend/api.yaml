@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: Photo Crop Service
+  description: A simple service to crop photos.
+  version: 1.0.0
+servers:
+  - url: 'http://example.com/api'
+paths:
+  /crop:
+    post:
+      summary: Crop a photo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+                  description: The photo to be cropped.
+                x:
+                  type: integer
+                  description: The x coordinate for the crop start point.
+                y:
+                  type: integer
+                  description: The y coordinate for the crop start point.
+                width:
+                  type: integer
+                  description: The width of the crop area.
+                height:
+                  type: integer
+                  description: The height of the crop area.
+              required:
+                - photo
+                - x
+                - y
+                - width
+                - height
+      responses:
+        '200':
+          description: The cropped photo.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid request parameters.
+        '500':
+          description: Internal server error.
