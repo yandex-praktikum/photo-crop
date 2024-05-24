@@ -12,7 +12,7 @@ import {
 	scaleSize,
 	Size,
 } from '../../utils/box.ts';
-import { crop, download, throttle } from '../../utils/utils.ts';
+import { crop, download, remoteCrop, throttle } from '../../utils/utils.ts';
 import { Actions } from '../Actions/Action.tsx';
 
 import styles from './App.module.scss';
@@ -45,10 +45,17 @@ function App() {
 			box,
 			getScale(size!.image.rendered, size!.image.natural)
 		);
-		try {
-			download(crop(ref.current!, cropSize), 'cropped.png');
-		} catch (e) {
-			console.error(e);
+		// Если в настройках установлен сервер, отправляем запрос на обрезку
+		if (import.meta.env.VITE_CROP_API) {
+			// @todo: можно было бы проверять доступность сервера
+			void remoteCrop('/api/crop', files[0], cropSize);
+		} else {
+			// Иначе обрезаем изображение локально
+			try {
+				download(crop(ref.current!, cropSize), 'cropped.png');
+			} catch (e) {
+				console.error(e);
+			}
 		}
 	};
 

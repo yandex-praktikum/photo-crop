@@ -1,6 +1,8 @@
 # PhotoCrop — пример реализации обрезки изображений
 
-Стек: TypeScript, React, SCSS, Vite, Jest
+Стек: TypeScript, React, SCSS, Vite, Jest, Express, Multer, Sharp.
+Конфиг: dotenv
+Тулсет: ESLint, Prettier, Husky, lint-staged
 
 ## Описание
 
