@@ -44,15 +44,17 @@ export const ImagePreview = React.forwardRef<
 	}, [ref, setSize]);
 
 	useEffect(() => {
-		// Создаем объект FileReader для чтения файла,
-		// но он будет работать только с файлами,
-		// которые были добавлены через input[type="file"] или Drag'n'Drop
-		const reader = new FileReader();
-		reader.onload = () => {
-			setSrc(reader.result as string);
-		};
-		// Преобразуем файл в Data URL
-		reader.readAsDataURL(file);
+		if (file) {
+			// Создаем объект FileReader для чтения файла,
+			// но он будет работать только с файлами,
+			// которые были добавлены через input[type="file"] или Drag'n'Drop
+			const reader = new FileReader();
+			reader.onload = () => {
+				setSrc(reader.result as string);
+			};
+			// Преобразуем файл в Data URL
+			reader.readAsDataURL(file);
+		}
 	}, [file]);
 
 	useEffect(() => {
@@ -76,7 +78,7 @@ export const ImagePreview = React.forwardRef<
 			}}
 			onLoad={getSize}
 			src={src}
-			alt={file.name}
+			alt={file?.name}
 			className={className}
 		/>
 	) : (
