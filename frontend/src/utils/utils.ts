@@ -8,7 +8,7 @@ import { Box } from './box.ts';
 export const isMutableRef = (
 	value: unknown
 ): value is React.MutableRefObject<unknown> => {
-	return Object.hasOwn(value as object, 'current');
+	return !!value && Object.hasOwn(value as object, 'current');
 };
 
 /**

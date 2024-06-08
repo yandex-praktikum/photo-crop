@@ -1,138 +1,49 @@
-import { useRef, useState } from 'react';
+import { useReducer, useState } from 'react';
 import clsx from 'clsx';
 
 import { FileUpload } from '../FileUpload/FileUpload.tsx';
-import { ImagePreview, ImageSize } from '../ImagePreview/ImagePreview.tsx';
-import { Resizer } from '../Resizer/Resizer.tsx';
-import {
-	Box,
-	getScale,
-	isBoxInside,
-	scaleBox,
-	scaleSize,
-	Size,
-} from '../../utils/box.ts';
-import { crop, download, remoteCrop, throttle } from '../../utils/utils.ts';
+import { getScale, isBoxInside, scaleBox } from '../../utils/box.ts';
+import { remoteCrop } from '../../utils/utils.ts';
 import { Actions } from '../Actions/Action.tsx';
 
 import styles from './App.module.scss';
+import { Cropper } from '../Cropper/Cropper.tsx';
+import { cropReducer, InitialCropState } from '../Cropper/Reducer.tsx';
 
 function App() {
 	// Сохраняем файлы, которые загрузил пользователь,
 	// объекты должны быть неизменными иначе потеряем к ним доступ
 	const [files, setFiles] = useState<File[]>([]);
-	// Сохраняем координаты и размеры области для обрезки
-	const [box, setBox] = useState<Box>({
-		x: 0,
-		y: 0,
-		width: 0,
-		height: 0,
-	});
-	// Сохраняем размеры изображения и минимальные и максимальные размеры области для обрезки
-	const [size, setSize] = useState<{
-		image: ImageSize; // размеры изображения (оригинальное и после отрисовки)
-		min: Size;
-		max: Size;
-	} | null>(null);
-	// Пока еще нет сервера, а проверить наши вычисления на практике хочется,
-	// поэтому используем ref для доступа к изображению
-	// и передаем его в функцию crop для локальной обрезки
-	const ref = useRef<HTMLImageElement | null>(null);
+	const [state, dispatch] = useReducer(cropReducer, InitialCropState);
 
 	// Действия при нажатии на кнопку "Crop and download"
 	const onCrop = () => {
 		const cropSize = scaleBox(
-			box,
-			getScale(size!.image.rendered, size!.image.natural)
+			state.cropSettings[state.selected].box,
+			getScale(
+				state.cropSettings[state.selected].size!.image.rendered,
+				state.cropSettings[state.selected].size!.image.natural
+			)
 		);
 		// Если в настройках установлен сервер, отправляем запрос на обрезку
 		if (import.meta.env.VITE_CROP_API) {
 			// @todo: можно было бы проверять доступность сервера
-			void remoteCrop('/api/crop', files[0], cropSize);
-		} else {
-			// Иначе обрезаем изображение локально
-			try {
-				download(crop(ref.current!, cropSize), 'cropped.png');
-			} catch (e) {
-				console.error(e);
-			}
+			void remoteCrop(import.meta.env.VITE_CROP_API, files[0], cropSize);
 		}
 	};
 
 	// Действия при нажатии на кнопку "Reset"
 	const onReset = () => {
-		setFiles([]);
-		setSize(null);
-		setBox({
-			x: 0,
-			y: 0,
-			width: 0,
-			height: 0,
-		});
-	};
-
-	// Пересчитываем масштаб области для обрезки при изменении размеров окна
-	const onScale = throttle((image: ImageSize) => {
-		if (size) {
-			setSize((prev) => {
-				const scale = getScale(size.image.rendered, image.rendered);
-				console.log(scale);
-				setBox((prev) => scaleBox(prev, scale));
-				return {
-					...prev,
-					image,
-					min: scaleSize(prev!.min, scale),
-					max: scaleSize(prev!.max, scale),
-				};
-			});
-		}
-	}, 100);
-
-	// Обработчик изменения размера окна браузера
-	const onResize = (image: ImageSize) => {
-		// Первый раз устанавливаем размеры изображения и области для обрезки
-		if (size === null) {
-			setSize({
-				image,
-				min: {
-					width: 50,
-					height: 50,
-				},
-				max: {
-					width: image.rendered.width,
-					height: image.rendered.height,
-				},
-			});
-			setBox({
-				x: 0,
-				y: 0,
-				width: image.rendered.width,
-				height: image.rendered.height,
-			});
-		} else onScale(image); // Дальше, при изменении размеров окна, пересчитываем масштаб
+		dispatch({ type: 'RESET' });
 	};
 
 	return (
 		<main className={styles.app}>
-			{files[0] ? (
-				<div className={styles.container}>
-					<ImagePreview
-						ref={ref}
-						file={files[0]}
-						setSize={onResize}
-						className={styles.preview}
-					/>
-					{size && (
-						<Resizer
-							value={box}
-							onChange={setBox}
-							className={styles.resizer}
-							min={size.min}
-							max={size.max}
-						/>
-					)}
-				</div>
-			) : (
+			<Cropper
+				file={files[state.selected]}
+				state={state.cropSettings[state.selected]}
+				dispatch={dispatch}
+			>
 				<FileUpload
 					value={files}
 					onChange={setFiles}
@@ -140,7 +51,7 @@ function App() {
 					maxSize={1024 * 1024 * 2}
 					className={styles.dropzone}
 				/>
-			)}
+			</Cropper>
 
 			<Actions
 				className={styles.actions}
@@ -151,8 +62,11 @@ function App() {
 						onClick: onCrop,
 						isDisabled: !(
 							files.length !== 0 &&
-							size?.max &&
-							isBoxInside(box, size.max)
+							state.cropSettings[state.selected].size?.max &&
+							isBoxInside(
+								state.cropSettings[state.selected].box,
+								state.cropSettings[state.selected].size!.max
+							)
 						),
 					},
 					{
