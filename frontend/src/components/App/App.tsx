@@ -9,6 +9,8 @@ import { Actions } from '../Actions/Action.tsx';
 import styles from './App.module.scss';
 import { Cropper } from '../Cropper/Cropper.tsx';
 import { cropReducer, InitialCropState } from '../Cropper/Reducer.tsx';
+import { Selector } from '../Selector/Selector.tsx';
+import { ImagePreview } from '../ImagePreview/ImagePreview.tsx';
 
 function App() {
 	// Сохраняем файлы, которые загрузил пользователь,
@@ -28,7 +30,7 @@ function App() {
 		// Если в настройках установлен сервер, отправляем запрос на обрезку
 		if (import.meta.env.VITE_CROP_API) {
 			// @todo: можно было бы проверять доступность сервера
-			void remoteCrop(import.meta.env.VITE_CROP_API, files[0], cropSize);
+			void remoteCrop(import.meta.env.VITE_CROP_API, files[state.selected], cropSize);
 		}
 	};
 
@@ -49,9 +51,29 @@ function App() {
 					onChange={setFiles}
 					fileTypes={['image/jpeg', 'image/png']}
 					maxSize={1024 * 1024 * 2}
+					maxCount={10}
 					className={styles.dropzone}
 				/>
 			</Cropper>
+
+			<Selector
+				selected={state.selected}
+				total={state.cropSettings.length}
+				onChange={(index) => dispatch({ type: 'SELECT', payload: index })}
+				onAdd={() => dispatch({ type: 'ADD_CROPPER' })}
+			>
+				{({ index, className }) => (
+					<ImagePreview
+						file={files[index]}
+						className={className}
+						placeholder={<img
+							className={className}
+							src={'https://placehold.co/300x300?text=?'}
+							alt={`Preview ${index}`}
+						/>}
+					/>
+				)}
+			</Selector>
 
 			<Actions
 				className={styles.actions}
