@@ -5,7 +5,6 @@ import { ImagePreview, ImageSize } from '../ImagePreview/ImagePreview.tsx';
 import { Resizer } from '../Resizer/Resizer.tsx';
 import { throttle } from '../../utils/utils.ts';
 
-
 type CropperProps = {
 	file: File;
 	state: CropBox;
@@ -20,21 +19,19 @@ export const Cropper = ({ file, state, dispatch, children }: CropperProps) => {
 	}, 100);
 
 	return file ? (
-			<div className={styles.container}>
-				<ImagePreview
-					file={file}
-					setSize={onResize}
-					className={styles.preview}
+		<div className={styles.container}>
+			<ImagePreview file={file} setSize={onResize} className={styles.preview} />
+			{state.size && (
+				<Resizer
+					value={state.box}
+					onChange={(box) => dispatch({ type: 'CHANGE_BOX', payload: box })}
+					className={styles.resizer}
+					min={state.size.min}
+					max={state.size.max}
 				/>
-				{state.size && (
-					<Resizer
-						value={state.box}
-						onChange={box => dispatch({ type: 'CHANGE_BOX', payload: box })}
-						className={styles.resizer}
-						min={state.size.min}
-						max={state.size.max}
-					/>
-				)}
-			</div>
-		) : children;
+			)}
+		</div>
+	) : (
+		children
+	);
 };

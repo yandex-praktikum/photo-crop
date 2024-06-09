@@ -18,11 +18,11 @@ export type CropState = {
 
 export type CropActions =
 	| { type: 'RESET' }
-	| { type: 'SELECT', payload: number }
-	| { type: 'ADD_CROPPER' }
-	| { type: 'REMOVE_CROPPER', payload: number }
-	| { type: 'CHANGE_BOX', payload: Box }
-	| { type: 'CHANGE_SIZE', payload: ImageSize };
+	| { type: 'SELECT'; payload: number }
+	| { type: 'ADD_CROPPER'; payload?: number }
+	| { type: 'REMOVE_CROPPER'; payload: number }
+	| { type: 'CHANGE_BOX'; payload: Box }
+	| { type: 'CHANGE_SIZE'; payload: ImageSize };
 
 export const InitialCropBox: CropBox = {
 	box: {
@@ -50,24 +50,30 @@ export const cropReducer: Reducer<CropState, CropActions> = (state, action) => {
 			};
 		case 'ADD_CROPPER':
 			return {
-				selected: state.selected + 1,
+				selected: action.payload ? state.selected : state.selected + 1,
 				cropSettings: [
 					...state.cropSettings,
-					Object.assign({}, InitialCropBox),
+					...Array.from({ length: action.payload || 1 }, () =>
+						Object.assign({}, InitialCropBox)
+					),
 				],
 			};
 		case 'REMOVE_CROPPER':
-			if (state.cropSettings.length === 1) return Object.assign({}, InitialCropState);
-			else return {
-				...state,
-				cropSettings: state.cropSettings.filter((_, i) => i !== action.payload),
-				selected: state.selected >= 1 ? state.selected - 1 : 0,
-			};
+			if (state.cropSettings.length === 1)
+				return Object.assign({}, InitialCropState);
+			else
+				return {
+					...state,
+					cropSettings: state.cropSettings.filter(
+						(_, i) => i !== action.payload
+					),
+					selected: state.selected >= 1 ? state.selected - 1 : 0,
+				};
 		case 'CHANGE_BOX':
 			return {
 				...state,
 				cropSettings: state.cropSettings.map((crop, i) =>
-					i === state.selected ? { ...crop, box: action.payload } : crop,
+					i === state.selected ? { ...crop, box: action.payload } : crop
 				),
 			};
 		case 'CHANGE_SIZE':
@@ -96,7 +102,10 @@ export const cropReducer: Reducer<CropState, CropActions> = (state, action) => {
 								},
 							};
 						} else {
-							const scale = getScale(crop.size.image.rendered, action.payload.rendered);
+							const scale = getScale(
+								crop.size.image.rendered,
+								action.payload.rendered
+							);
 							return {
 								box: scaleBox(crop.box, scale),
 								size: {
