@@ -1,6 +1,7 @@
 module.exports = {
 	root: true,
 	env: { browser: true, es2020: true },
+	files: ['**/*.ts', '**/*.tsx'],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
@@ -8,7 +9,7 @@ module.exports = {
 		'prettier',
 		'plugin:storybook/recommended',
 	],
-	ignorePatterns: ['dist', '.eslintrc.cjs', 'jest.config.cjs', '!.storybook'],
+	ignorePatterns: ['dist', '.eslintrc.js', 'jest.config.cjs', '!.storybook'],
 	parser: '@typescript-eslint/parser',
 	plugins: ['react-refresh'],
 	rules: {
