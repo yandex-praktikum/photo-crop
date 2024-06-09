@@ -82,48 +82,12 @@ export function download(url: string, name: string) {
 	a.click();
 }
 
-/**
- * Функция для обрезки изображения на сервере
- * @param url
- * @param file
- * @param box
- */
-export async function remoteCrop(url: string, file: File, box: Box) {
-	const form = new FormData();
-	form.append('photo', file);
-	form.append('x', box.x.toString());
-	form.append('y', box.y.toString());
-	form.append('width', box.width.toString());
-	form.append('height', box.height.toString());
+export function promiseState(promise: Promise<unknown>) {
+	const pendingState = { status: 'pending' };
 
-	const response = await fetch(url, {
-		method: 'POST',
-		// Для следующих типов Content-Type браузер автоматически устанавливает заголовок
-		// Если в body передать FormData, то отправляем как multipart/form-data
-		// Если передать URLSearchParams, то отправляем как application/x-www-form-urlencoded
-		// Если передать строку, то отправляем как text/plain
-		// А чтобы передавать JSON, нужно установить заголовок вручную
-		body: form,
-	});
-	// Так мы могли бы получить имя с сервера
-	//const filename = response.headers.get('Content-Disposition')?.split('filename=')[1];
-
-	// Получаем бинарные данные изображения
-	const data = await response.blob();
-
-	// Создаем URL для скачивания, это не то же самое что и Data URL
-	// Data URL - это base64-строка,
-	// а URL.createObjectURL - это ссылка на объект в памяти браузера
-	const dataUrl = URL.createObjectURL(data);
-
-	// Инициируем скачивание файла.
-	// Попробуйте передать сюда filename, чтобы сохранить файл с именем с сервера
-	// Но на практике это не всегда работает, так как браузер может добавить _ в начале и в конце
-	// Поэтому лучше всего устанавливать имя файла вручную
-	// К тому же у нас есть имя оригинального файла выбранного пользователем
-	// Просто добавим к нему префикс или суффикс
-	download(dataUrl, `cropped_${file.name}`);
-
-	// Освобождаем память, занимаемую объектом
-	URL.revokeObjectURL(url);
+	return Promise.race([promise, pendingState]).then(
+		(value) =>
+			value === pendingState ? value : { status: 'fulfilled', value },
+		(reason) => ({ status: 'rejected', reason })
+	);
 }
