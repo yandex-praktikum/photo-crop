@@ -6,13 +6,16 @@ import { errors } from 'celebrate';
 import { PORT } from './config';
 
 import cropRouter from './route/crop';
+import uploadRouter from './route/upload';
 
 const app = express();
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use('/', cropRouter);
+app.use('/', uploadRouter);
 app.use(errors());
 
 app.listen(PORT, () => {
