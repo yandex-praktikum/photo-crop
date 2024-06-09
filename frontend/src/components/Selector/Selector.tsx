@@ -8,10 +8,20 @@ type SelectorProps = {
 	onChange: (index: number) => void;
 	onAdd: () => void;
 	className?: string;
-	children: (props: { index: number, className: string }) => ReactNode;
+	children: (props: { index: number; className: string }) => ReactNode;
 };
 
-export function Selector({ selected, total, onChange, onAdd, children, className }: SelectorProps) {
+/**
+ * Селектор для выбора элемента из списка
+ */
+export function Selector({
+	selected,
+	total,
+	onChange,
+	onAdd,
+	children,
+	className,
+}: SelectorProps) {
 	return (
 		<div className={clsx(styles.container, className)}>
 			{Array.from({ length: total }, (_, index) => (
@@ -25,10 +35,7 @@ export function Selector({ selected, total, onChange, onAdd, children, className
 					{children({ index, className: styles.preview })}
 				</button>
 			))}
-			<button
-				className={clsx(styles.item, styles.add)}
-				onClick={onAdd}
-			/>
+			<button className={clsx(styles.item, styles.add)} onClick={onAdd} />
 		</div>
 	);
 }

@@ -2,10 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { Selector } from './Selector.tsx';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-const min = 50;
-const max = 250;
-
 const meta = {
 	title: 'Component/Selector',
 	component: Selector,
@@ -31,8 +27,12 @@ export const Default: Story = {
 	args: {
 		selected: 2,
 		total: 5,
-		children: ({ index, className }: { index: number, className: string }) => (
-			<img src={`https://placehold.co/50x50?text=${index}`} className={className} alt={`Preview ${index}`} />
-		)
-	}
+		children: ({ index, className }: { index: number; className: string }) => (
+			<img
+				src={`https://placehold.co/50x50?text=${index}`}
+				className={className}
+				alt={`Preview ${index}`}
+			/>
+		),
+	},
 };
