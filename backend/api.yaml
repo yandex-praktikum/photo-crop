@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
   title: Photo Crop Service
-  description: A simple service to crop photos.
-  version: 1.0.0
+  description: A simple service for crop multiple photos.
+  version: 2.0.0
 servers:
-  - url: 'http://example.com/api'
+  - url: 'http://localhost:3000/'
 paths:
-  /crop:
+  /upload:
     post:
-      summary: Crop a photo
+      summary: Upload a photo
       requestBody:
         content:
           multipart/form-data:
@@ -18,25 +18,106 @@ paths:
                 photo:
                   type: string
                   format: binary
-                  description: The photo to be cropped.
-                x:
-                  type: integer
-                  description: The x coordinate for the crop start point.
-                y:
-                  type: integer
-                  description: The y coordinate for the crop start point.
-                width:
-                  type: integer
-                  description: The width of the crop area.
-                height:
-                  type: integer
-                  description: The height of the crop area.
+                  description: The photo to be uploaded.
               required:
                 - photo
-                - x
-                - y
-                - width
-                - height
+      responses:
+        '200':
+          description: The uploaded photo.
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid request parameters.
+        '500':
+          description: Internal server error
+  /crop:
+    post:
+      summary: Crop a multiple uploaded photo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  photo:
+                    type: string
+                    format: binary
+                    description: The photo to be cropped.
+                  fileName:
+                    type: string
+                    description: The name of the cropped photo.
+                  box:
+                    type: object
+                    properties:
+                      x:
+                        type: integer
+                        description: The x-coordinate of the top-left corner of the box.
+                      y:
+                        type: integer
+                        description: The y-coordinate of the top-left corner of the box.
+                      width:
+                        type: integer
+                        description: The width of the box.
+                      height:
+                        type: integer
+                        description: The height of the box.
+      responses:
+        '200':
+          description: ID of the cropping task.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    type: string
+        '400':
+          description: Invalid request parameters.
+        '500':
+          description: Internal server error.
+  /crop/{task}:
+    get:
+      summary: Get state of the cropping task
+      parameters:
+        - name: task
+          in: path
+          required: true
+          description: The ID of the cropping task.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The cropped photo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+        '202':
+          description: The cropping task is still in progress.
+        '400':
+          description: Invalid request parameters.
+        '404':
+          description: The cropping task does not exist.
+        '500':
+          description: Internal server error.
+  /crop/{task}/result:
+    get:
+      summary: Get the result of the cropping task
+      parameters:
+        - name: task
+          in: path
+          required: true
+          description: The ID of the cropping task.
+          schema:
+            type: string
       responses:
         '200':
           description: The cropped photo.
@@ -45,7 +126,7 @@ paths:
               schema:
                 type: string
                 format: binary
-        '400':
-          description: Invalid request parameters.
+        '404':
+          description: The cropping task does not exist or the result is not ready.
         '500':
           description: Internal server error.

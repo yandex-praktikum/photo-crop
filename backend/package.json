@@ -10,8 +10,18 @@
 		"lint": "eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"format": "prettier . --write",
-		"prepare": "cd .. && husky backend/.husky"
+		"prepare": "cd .. && husky backend/.husky",
+		"ci": "npm run build && npm run start"
 	},
+	"cpu": [
+		"x64",
+		"ia32",
+		"arm64"
+	],
+	"libc": [
+		"glibc",
+		"musl"
+	],
 	"lint-staged": {
 		"**/*.{ts,tsx}": "npm run lint",
 		"**/*": "npm run format"
@@ -50,10 +60,12 @@
 		"dotenv": "^16.4.5",
 		"express": "^4.19.2",
 		"joi": "^17.13.1",
+		"jszip": "^3.10.1",
 		"morgan": "^1.10.0",
 		"multer": "^1.4.5-lts.1",
 		"sharp": "^0.33.4",
 		"uuid": "^9.0.1",
 		"winston": "^3.13.0"
-	}
+	},
+	"packageManager": "yarn@4.2.2"
 }
